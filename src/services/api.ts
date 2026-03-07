@@ -3,8 +3,7 @@ import { mockApi } from '../mocks/mockApi'
 
 const IS_STACKBLITZ =
   typeof window !== 'undefined' &&
-  (window.location.hostname.includes('stackblitz') ||
-    window.location.hostname.includes('webcontainer'))
+  (window.location.hostname.includes('stackblitz') || window.location.hostname.includes('webcontainer'))
 
 const USE_MOCK = IS_STACKBLITZ || (import.meta as any).env.VITE_USE_MOCK === 'true'
 
@@ -69,9 +68,7 @@ export const api = {
   },
   async history(isin: string, range: History['range']): Promise<History> {
     if (USE_MOCK) return mockApi.history(isin, range)
-    return realFetch<History>(
-      `/api/history?isin=${encodeURIComponent(isin)}&range=${range}`
-    )
+    return realFetch<History>(`/api/history?isin=${encodeURIComponent(isin)}&range=${range}`)
   },
   async watchlistGet(): Promise<{ items: WatchlistItem[] }> {
     if (USE_MOCK) return mockApi.watchlistGet()
@@ -79,18 +76,7 @@ export const api = {
   },
   async watchlistAdd(isin: string) {
     if (USE_MOCK) return mockApi.watchlistAdd(isin)
-    const r = await fetch(`/api/watchlist/${encodeURIComponent(isin)}`, {
-      method: 'POST',
-    })
-    const j = await r.json().catch(() => ({}))
-    if (!r.ok) throw Object.assign(new Error(j?.message || r.statusText), { payload: j })
-    return j
-  },
-  async watchlistRemove(isin: string) {
-    if (USE_MOCK) return mockApi.watchlistRemove(isin)
-    const r = await fetch(`/api/watchlist/${encodeURIComponent(isin)}`, {
-      method: 'DELETE',
-    })
+    const r = await fetch(`/api/watchlist/${encodeURIComponent(isin)}`, { method: 'POST' })
     const j = await r.json().catch(() => ({}))
     if (!r.ok) throw Object.assign(new Error(j?.message || r.statusText), { payload: j })
     return j

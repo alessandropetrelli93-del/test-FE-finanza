@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { api, useAsync } from '../services/api'
 import { useEffect, useMemo, useState } from 'react'
 import LineChart from '../components/LineChart'
@@ -7,12 +7,13 @@ import { addToList, loadLists, saveLists } from '../services/listStore'
 
 export default function Instrument() {
   const { isin: rawIsin } = useParams()
-  const nav = useNavigate()
   const isin = (rawIsin || '').toUpperCase()
   const [range, setRange] = useState<'1M' | '6M' | '1Y' | '5Y'>('1Y')
 
   const [listsState, setListsState] = useState(loadLists())
-  useEffect(() => { saveLists(listsState) }, [listsState])
+  useEffect(() => {
+    saveLists(listsState)
+  }, [listsState])
 
   const quote = useAsync(() => api.quote(isin), [isin])
   const hist = useAsync(() => api.history(isin, range), [isin, range])
@@ -22,10 +23,10 @@ export default function Instrument() {
   const metrics = useMemo(() => {
     const s = hist.data?.series || []
     if (!s.length) return null
-    const vals = s.map(p => p.value)
+    const vals = s.map((p) => p.value)
     const min = Math.min(...vals)
     const max = Math.max(...vals)
-    const last = s[s.length-1]?.value
+    const last = s[s.length - 1]?.value
     return { min, max, last }
   }, [hist.data])
 
@@ -40,12 +41,9 @@ export default function Instrument() {
     ]
   }, [quote.data])
 
-  function openDialog(){ setDlg(true) }
-
   function addToSelectedList(name: string) {
-    setListsState(s => addToList(s, name, isin))
-    // In modalità reale, sincronizziamo anche con la watchlist backend SOLO per Personale
-    if (name === 'Personale') api.watchlistAdd(isin).catch(()=>{})
+    setListsState((s) => addToList(s, name, isin))
+    if (name === 'Personale') api.watchlistAdd(isin).catch(() => {})
   }
 
   return (
@@ -66,7 +64,7 @@ export default function Instrument() {
           </div>
         </div>
         <div style={{ flex: 0.8, textAlign: 'right' }}>
-          <button onClick={openDialog}>＋ Aggiungi a lista</button>
+          <button onClick={() => setDlg(true)}>＋ Aggiungi a lista</button>
           <div className="muted" style={{ marginTop: 6 }}>
             Lista attiva: <b>{listsState.active}</b>
           </div>
@@ -78,8 +76,7 @@ export default function Instrument() {
         <div className="error">
           {String((quote.error as any).message || quote.error)}
 
-
-          {JSON.stringify((quote.error as any).payload || {}, null, 2)}
+{JSON.stringify((quote.error as any).payload || {}, null, 2)}
         </div>
       )}
 
@@ -108,9 +105,15 @@ export default function Instrument() {
         </div>
         <div style={{ flex: 1 }} />
         <div className="metrics">
-          <div className="metric">Min <b>{metrics ? metrics.min.toFixed(2) : '—'}</b></div>
-          <div className="metric">Max <b>{metrics ? metrics.max.toFixed(2) : '—'}</b></div>
-          <div className="metric">Last <b>{metrics ? metrics.last.toFixed(2) : '—'}</b></div>
+          <div className="metric">
+            Min <b>{metrics ? metrics.min.toFixed(2) : '—'}</b>
+          </div>
+          <div className="metric">
+            Max <b>{metrics ? metrics.max.toFixed(2) : '—'}</b>
+          </div>
+          <div className="metric">
+            Last <b>{metrics ? metrics.last.toFixed(2) : '—'}</b>
+          </div>
         </div>
       </div>
 
@@ -119,8 +122,7 @@ export default function Instrument() {
         <div className="error">
           {String((hist.error as any).message || hist.error)}
 
-
-          {JSON.stringify((hist.error as any).payload || {}, null, 2)}
+{JSON.stringify((hist.error as any).payload || {}, null, 2)}
         </div>
       )}
 
@@ -128,18 +130,12 @@ export default function Instrument() {
         <div style={{ marginTop: 10 }}>
           <LineChart series={hist.data.series} />
           <div className="muted" style={{ marginTop: 6 }}>
-            {hist.data.series.length} punti · range {hist.data.range}
+            Passa con il cursore sul grafico per vedere data e quotazione.
           </div>
         </div>
       )}
 
-      <AddToListDialog
-        open={dlg}
-        onClose={() => setDlg(false)}
-        listsState={listsState}
-        onAdd={addToSelectedList}
-        isin={isin}
-      />
+      <AddToListDialog open={dlg} onClose={() => setDlg(false)} listsState={listsState} onAdd={addToSelectedList} isin={isin} />
     </section>
   )
 }

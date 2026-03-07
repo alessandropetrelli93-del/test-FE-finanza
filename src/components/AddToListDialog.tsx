@@ -14,7 +14,7 @@ export default function AddToListDialog({
   onAdd: (listName: string) => void
   isin: string
 }) {
-  const names = useMemo(() => Object.keys(listsState.lists).sort((a,b)=>a.localeCompare(b)), [listsState])
+  const names = useMemo(() => Object.keys(listsState.lists).sort((a, b) => a.localeCompare(b)), [listsState])
   const [selected, setSelected] = useState(listsState.active)
   const [newName, setNewName] = useState('')
 
@@ -30,29 +30,33 @@ export default function AddToListDialog({
 
   return (
     <div className="dialog-backdrop" onMouseDown={onClose}>
-      <div className="dialog" onMouseDown={(e)=>e.stopPropagation()}>
+      <div className="dialog" onMouseDown={(e) => e.stopPropagation()}>
         <h3>Aggiungi {isin} a una lista</h3>
         <div className="row">
           <div>
             <label>Lista esistente</label>
-            <select value={selected} onChange={(e)=>setSelected(e.target.value)}>
-              {names.map(n => <option key={n} value={n}>{n}</option>)}
+            <select value={selected} onChange={(e) => setSelected(e.target.value)}>
+              {names.map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
             </select>
           </div>
           <div>
             <label>Oppure nuova lista</label>
-            <input value={newName} onChange={(e)=>setNewName(e.target.value)} placeholder="Es. Cliente Rossi" />
+            <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Es. Cliente Rossi" />
           </div>
         </div>
-        <div className="row" style={{marginTop:12, justifyContent:'flex-end'}}>
-          <div style={{flex:'0 0 auto'}}>
+        <div className="row" style={{ marginTop: 12, justifyContent: 'flex-end' }}>
+          <div style={{ flex: '0 0 auto' }}>
             <button className="secondary" onClick={onClose}>Annulla</button>
           </div>
-          <div style={{flex:'0 0 auto'}}>
+          <div style={{ flex: '0 0 auto' }}>
             <button onClick={submit}>Aggiungi</button>
           </div>
         </div>
-        <p className="muted" style={{marginTop:10}}>
+        <p className="muted" style={{ marginTop: 10 }}>
           MVP: le liste sono locali (nome libero). In futuro possono essere collegate ai clienti.
         </p>
       </div>

@@ -1,5 +1,3 @@
-// Mock data provider for offline demos.
-
 function randSeries(days: number, start = 100) {
   const out: { date: string; value: number }[] = []
   let v = start
@@ -14,38 +12,10 @@ function randSeries(days: number, start = 100) {
 }
 
 const db: Record<string, any> = {
-  IT0005320129: {
-    isin: 'IT0005320129',
-    name: 'Obbligazione (mock)',
-    type: 'Bond',
-    currency: 'EUR',
-    market: 'MOT',
-    symbol: 'BOND.MOCK',
-  },
-  IT0000084027: {
-    isin: 'IT0000084027',
-    name: 'Azione (mock)',
-    type: 'Equity',
-    currency: 'EUR',
-    market: 'MTA',
-    symbol: 'ASTM.MOCK',
-  },
-  IE00B4L5Y983: {
-    isin: 'IE00B4L5Y983',
-    name: 'ETF MSCI World (mock)',
-    type: 'ETF',
-    currency: 'EUR',
-    market: 'XETRA',
-    symbol: 'ETF.MOCK',
-  },
-  US4592001014: {
-    isin: 'US4592001014',
-    name: 'IBM (mock)',
-    type: 'Equity',
-    currency: 'USD',
-    market: 'NYSE',
-    symbol: 'IBM',
-  },
+  IT0005320129: { isin: 'IT0005320129', name: 'Obbligazione (mock)', type: 'Bond', currency: 'EUR', market: 'MOT', symbol: 'BOND.MOCK' },
+  IT0000084027: { isin: 'IT0000084027', name: 'Azione (mock)', type: 'Equity', currency: 'EUR', market: 'MTA', symbol: 'ASTM.MOCK' },
+  IE00B4L5Y983: { isin: 'IE00B4L5Y983', name: 'ETF MSCI World (mock)', type: 'ETF', currency: 'EUR', market: 'XETRA', symbol: 'ETF.MOCK' },
+  US4592001014: { isin: 'US4592001014', name: 'IBM (mock)', type: 'Equity', currency: 'USD', market: 'NYSE', symbol: 'IBM' },
 }
 
 const watch = new Set<string>(['IT0000084027', 'IE00B4L5Y983'])
@@ -79,23 +49,13 @@ export const mockApi = {
     }
     const days = range === '1M' ? 30 : range === '6M' ? 180 : range === '1Y' ? 365 : 365 * 5
     const cap = range === '5Y' ? 1300 : range === '1Y' ? 260 : range === '6M' ? 132 : 22
-    return {
-      isin: key,
-      range,
-      symbol: base.symbol,
-      series: randSeries(Math.min(days, cap), 100 + Math.random() * 40),
-      source: 'Mock data',
-    }
+    return { isin: key, range, symbol: base.symbol, series: randSeries(Math.min(days, cap), 100 + Math.random() * 40), source: 'Mock data' }
   },
   async watchlistGet() {
     return { items: [...watch].map((i) => db[i] || { isin: i }) }
   },
   async watchlistAdd(isin: string) {
     watch.add(isin.toUpperCase())
-    return { ok: true, isin: isin.toUpperCase() }
-  },
-  async watchlistRemove(isin: string) {
-    watch.delete(isin.toUpperCase())
     return { ok: true, isin: isin.toUpperCase() }
   },
 }
