@@ -1,16 +1,32 @@
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { api, useAsync } from '../services/api'
+import { addToList, loadLists, removeFromList, saveLists } from '../services/listStore'
 
 export default function Home() {
   const nav = useNavigate()
   const [isin, setIsin] = useState('US4592001014')
-  const wl = useAsync(() => api.watchlistGet(), [])
+
+  const [listsState, setListsState] = useState(loadLists())
+  useEffect(() => { saveLists(listsState) }, [listsState])
+
+  const activeName = listsState.active
+  const activeIsins = listsState.lists[activeName] || []
+
+  // build items from backend watchlist (for metadata) OR mock; fall back to ISIN
+  const meta = useAsync(() => api.watchlistGet(), [])
+  const metaMap = useMemo(() => {
+    const m = new Map<string, any>()
+    meta.data?.items?.forEach(it => m.set(it.isin.toUpperCase(), it))
+    return m
+  }, [meta.data])
+
+  function openIsin(i: string){ nav(`/instrument/${encodeURIComponent(i)}`) }
 
   return (
     <div className="grid">
       <section className="card">
-        <h2 style={{marginTop:0}}>Search</h2>
+        <h2>Ricerca</h2>
         <p className="muted">Inserisci un ISIN e apri la scheda strumento.</p>
         <div className="row">
           <div>
@@ -19,32 +35,52 @@ export default function Home() {
           </div>
           <div style={{flex:'0 0 auto'}}>
             <label>&nbsp;</label>
-            <button onClick={()=>nav(`/instrument/${encodeURIComponent(isin.trim().toUpperCase())}`)}>Cerca</button>
+            <button onClick={()=>openIsin(isin.trim().toUpperCase())}>Cerca</button>
           </div>
         </div>
         <div className="note" style={{marginTop:12}}>
-          MVP consulente singolo: watchlist personale + scheda strumento + grafico.
+          MVP consulente: liste libere (es. “Cliente Rossi”) + scheda strumento + grafico.
         </div>
       </section>
 
       <aside className="card">
-        <h2 style={{marginTop:0}}>★ Your watchlist</h2>
-        {wl.loading && <p className="muted">Caricamento…</p>}
-        {wl.error && <div className="error">{String(wl.error.message || wl.error)}</div>}
-        {wl.data && (
-          <ul className="list">
-            {wl.data.items.length === 0 && <li><span>Nessun elemento</span><small>Aggiungi dalla scheda strumento.</small></li>}
-            {wl.data.items.map(it => (
-              <li key={it.isin}>
+        <div className="row" style={{justifyContent:'space-between'}}>
+          <h2 style={{margin:0}}>Liste</h2>
+          <button className="secondary" onClick={()=>nav('/lists')}>Gestisci</button>
+        </div>
+        <div className="row" style={{marginTop:8}}>
+          <div>
+            <label>Lista attiva</label>
+            <select value={activeName} onChange={(e)=>setListsState(s=>({ ...s, active: e.target.value }))}>
+              {Object.keys(listsState.lists).sort().map(n => <option key={n} value={n}>{n}</option>)}
+            </select>
+          </div>
+        </div>
+
+        {meta.loading && <p className="muted">Caricamento…</p>}
+        {meta.error && <div className="error">{String(meta.error.message || meta.error)}</div>}
+
+        <ul className="list">
+          {activeIsins.length === 0 && (
+            <li>
+              <span>Nessun elemento</span>
+              <small>Aggiungi dalla scheda strumento.</small>
+            </li>
+          )}
+          {activeIsins.slice(0,6).map(i => {
+            const it = metaMap.get(i) || { isin: i }
+            return (
+              <li key={i}>
                 <div>
                   <div style={{fontWeight:800}}>{it.isin}</div>
                   <small>{it.name || '—'} {it.type ? `· ${it.type}`:''}</small>
                 </div>
-                <button className="ghost" onClick={()=>nav(`/instrument/${encodeURIComponent(it.isin)}`)}>Apri</button>
+                <button className="ghost" onClick={()=>openIsin(i)}>Apri</button>
               </li>
-            ))}
-          </ul>
-        )}
+            )
+          })}
+        </ul>
+        <p className="muted" style={{marginTop:10}}>Mostrati {Math.min(6, activeIsins.length)} di {activeIsins.length}.</p>
       </aside>
     </div>
   )
