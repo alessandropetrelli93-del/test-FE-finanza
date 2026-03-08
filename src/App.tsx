@@ -4,34 +4,35 @@ import Instrument from './pages/Instrument'
 import Lists from './pages/Lists'
 import { useBackendHealth } from './services/api'
 
+/**
+ * Modalità EMBEDDED: la cornice (barra rossa + menu) è fornita dalla Intranet.
+ * Qui teniamo solo una sub-navigazione leggera per Ricerca/Liste.
+ */
 export default function App() {
   const loc = useLocation()
   const health = useBackendHealth()
 
   return (
-    <>
-      <header>
-        <div className="row">
-          <div className="row" style={{ flex: '0 0 auto' }}>
-            <h1>ISIN Viewer</h1>
-            <span className={health.ok ? 'tag ok' : 'tag warn'}>
-              {health.ok ? 'Backend OK' : 'Mock/Offline'}
-            </span>
-          </div>
-          <div className="row" style={{ flex: '0 0 auto' }}>
-            <Link className="pill" to="/">Home</Link>
-            <Link className="pill" to="/lists">Liste</Link>
-            <span className="pill">{loc.pathname}</span>
-          </div>
+    <main>
+      <div className="subnav">
+        <div>
+          <div className="title">ISIN Viewer</div>
+          <div className="muted">Consultazione informativa strumenti</div>
         </div>
-      </header>
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/instrument/:isin" element={<Instrument />} />
-          <Route path="/lists" element={<Lists />} />
-        </Routes>
-      </main>
-    </>
+        <div className="subnav-right">
+          <Link className={loc.pathname === '/' ? 'tab active' : 'tab'} to="/">Ricerca</Link>
+          <Link className={loc.pathname === '/lists' ? 'tab active' : 'tab'} to="/lists">Liste</Link>
+          <span className={health.ok ? 'tag ok' : 'tag warn'}>
+            {health.ok ? 'Backend OK' : 'Mock/Offline'}
+          </span>
+        </div>
+      </div>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/instrument/:isin" element={<Instrument />} />
+        <Route path="/lists" element={<Lists />} />
+      </Routes>
+    </main>
   )
 }

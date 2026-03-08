@@ -5,6 +5,7 @@ const IS_STACKBLITZ =
   typeof window !== 'undefined' &&
   (window.location.hostname.includes('stackblitz') || window.location.hostname.includes('webcontainer'))
 
+// In embedded/intranet l'hostname non è stackblitz, quindi VITE_USE_MOCK controlla la modalità.
 const USE_MOCK = IS_STACKBLITZ || (import.meta as any).env.VITE_USE_MOCK === 'true'
 
 export type Quote = {
@@ -70,10 +71,6 @@ export const api = {
     if (USE_MOCK) return mockApi.history(isin, range)
     return realFetch<History>(`/api/history?isin=${encodeURIComponent(isin)}&range=${range}`)
   },
-  async watchlistGet(): Promise<{ items: WatchlistItem[] }> {
-    if (USE_MOCK) return mockApi.watchlistGet()
-    return realFetch<{ items: WatchlistItem[] }>('/api/watchlist')
-  },
   async watchlistAdd(isin: string) {
     if (USE_MOCK) return mockApi.watchlistAdd(isin)
     const r = await fetch(`/api/watchlist/${encodeURIComponent(isin)}`, { method: 'POST' })
@@ -86,9 +83,7 @@ export const api = {
 export function useBackendHealth() {
   const [ok, setOk] = useState(false)
   useEffect(() => {
-    api.health()
-      .then(() => setOk(true))
-      .catch(() => setOk(false))
+    api.health().then(() => setOk(true)).catch(() => setOk(false))
   }, [])
   return { ok, mode: USE_MOCK ? 'mock' : ok ? 'real' : 'offline' }
 }

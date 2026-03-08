@@ -41,13 +41,6 @@ export function addToList(state: ListsState, listName: string, isin: string): Li
   return { ...s, active: key, lists: { ...s.lists, [key]: next } }
 }
 
-export function removeFromList(state: ListsState, listName: string, isin: string): ListsState {
-  const key = listName.trim()
-  const up = isin.toUpperCase()
-  const arr = state.lists[key] || []
-  return { ...state, lists: { ...state.lists, [key]: arr.filter((x) => x !== up) } }
-}
-
 export function renameList(state: ListsState, from: string, to: string): ListsState {
   const f = from.trim()
   const t = to.trim()

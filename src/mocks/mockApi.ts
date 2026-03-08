@@ -18,8 +18,6 @@ const db: Record<string, any> = {
   US4592001014: { isin: 'US4592001014', name: 'IBM (mock)', type: 'Equity', currency: 'USD', market: 'NYSE', symbol: 'IBM' },
 }
 
-const watch = new Set<string>(['IT0000084027', 'IE00B4L5Y983'])
-
 export const mockApi = {
   async quote(isin: string) {
     const key = isin.toUpperCase()
@@ -51,11 +49,7 @@ export const mockApi = {
     const cap = range === '5Y' ? 1300 : range === '1Y' ? 260 : range === '6M' ? 132 : 22
     return { isin: key, range, symbol: base.symbol, series: randSeries(Math.min(days, cap), 100 + Math.random() * 40), source: 'Mock data' }
   },
-  async watchlistGet() {
-    return { items: [...watch].map((i) => db[i] || { isin: i }) }
-  },
   async watchlistAdd(isin: string) {
-    watch.add(isin.toUpperCase())
     return { ok: true, isin: isin.toUpperCase() }
   },
 }

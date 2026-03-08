@@ -37,9 +37,7 @@ export default function AddToListDialog({
             <label>Lista esistente</label>
             <select value={selected} onChange={(e) => setSelected(e.target.value)}>
               {names.map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
+                <option key={n} value={n}>{n}</option>
               ))}
             </select>
           </div>
@@ -56,9 +54,6 @@ export default function AddToListDialog({
             <button onClick={submit}>Aggiungi</button>
           </div>
         </div>
-        <p className="muted" style={{ marginTop: 10 }}>
-          MVP: le liste sono locali (nome libero). In futuro possono essere collegate ai clienti.
-        </p>
       </div>
     </div>
   )

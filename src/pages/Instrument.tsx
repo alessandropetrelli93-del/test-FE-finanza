@@ -11,9 +11,7 @@ export default function Instrument() {
   const [range, setRange] = useState<'1M' | '6M' | '1Y' | '5Y'>('1Y')
 
   const [listsState, setListsState] = useState(loadLists())
-  useEffect(() => {
-    saveLists(listsState)
-  }, [listsState])
+  useEffect(() => { saveLists(listsState) }, [listsState])
 
   const quote = useAsync(() => api.quote(isin), [isin])
   const hist = useAsync(() => api.history(isin, range), [isin, range])
@@ -85,9 +83,7 @@ export default function Instrument() {
           {kpis.map((k) => (
             <div className="box" key={k.label}>
               <div className="muted">{k.label}</div>
-              <div className="val">
-                {k.value} <span className="muted">{k.suffix}</span>
-              </div>
+              <div className="val">{k.value} <span className="muted">{k.suffix}</span></div>
             </div>
           ))}
         </div>
@@ -105,15 +101,9 @@ export default function Instrument() {
         </div>
         <div style={{ flex: 1 }} />
         <div className="metrics">
-          <div className="metric">
-            Min <b>{metrics ? metrics.min.toFixed(2) : '—'}</b>
-          </div>
-          <div className="metric">
-            Max <b>{metrics ? metrics.max.toFixed(2) : '—'}</b>
-          </div>
-          <div className="metric">
-            Last <b>{metrics ? metrics.last.toFixed(2) : '—'}</b>
-          </div>
+          <div className="metric">Min <b>{metrics ? metrics.min.toFixed(2) : '—'}</b></div>
+          <div className="metric">Max <b>{metrics ? metrics.max.toFixed(2) : '—'}</b></div>
+          <div className="metric">Last <b>{metrics ? metrics.last.toFixed(2) : '—'}</b></div>
         </div>
       </div>
 
@@ -129,9 +119,7 @@ export default function Instrument() {
       {hist.data && (
         <div style={{ marginTop: 10 }}>
           <LineChart series={hist.data.series} />
-          <div className="muted" style={{ marginTop: 6 }}>
-            Passa con il cursore sul grafico per vedere data e quotazione.
-          </div>
+          <div className="muted" style={{ marginTop: 6 }}>Passa con il cursore sul grafico per vedere data e quotazione.</div>
         </div>
       )}
 

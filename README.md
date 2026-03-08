@@ -1,6 +1,5 @@
-# ISIN Viewer – Frontend (v3)
+# ISIN Viewer – Frontend (v4 embedded)
 
-- Asse temporale sotto il grafico
-- Tooltip mouseover (data + quotazione)
-- Liste libere
-- Look & feel Sparkasse
+- Pensato per essere aperto dalla Intranet (cornice corporate)
+- Subnav leggera Ricerca/Liste
+- Grafico con asse temporale + tooltip

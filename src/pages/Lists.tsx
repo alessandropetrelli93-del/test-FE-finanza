@@ -57,13 +57,9 @@ export default function Lists() {
           <label>Rinomina (da)</label>
           <select value={renameFrom} onChange={(e) => setRenameFrom(e.target.value)}>
             <option value="">—</option>
-            {listNames
-              .filter((n) => n !== 'Personale')
-              .map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
+            {listNames.filter((n) => n !== 'Personale').map((n) => (
+              <option key={n} value={n}>{n}</option>
+            ))}
           </select>
         </div>
         <div>
@@ -73,19 +69,6 @@ export default function Lists() {
         <div style={{ flex: '0 0 auto' }}>
           <label>&nbsp;</label>
           <button className="secondary" onClick={doRename}>Rinomina</button>
-        </div>
-      </div>
-
-      <div className="row" style={{ marginTop: 10 }}>
-        <div>
-          <label>Lista attiva</label>
-          <select value={state.active} onChange={(e) => setState((s) => ({ ...s, active: e.target.value }))}>
-            {listNames.map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
 
