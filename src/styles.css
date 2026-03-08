@@ -1,86 +1,24 @@
-:root{
-  /* Sparkasse corporate design (base) */
-  --primary:#DF0025;
-  --bg:#F6F6F6;
-  --card:#FFFFFF;
-  --text:#3F3F3F;
-  --muted:#9D9D9D;
-  --border: rgba(0,0,0,.10);
-  --shadow: 0px 20px 50px 0px rgba(0,0,0,0.05);
 
-  --ok:#0B8E5F;
-  --warn:#B87900;
-  --bad:#B00020;
-}
+:root{--primary:#DF0025;--bg:#F6F6F6;--card:#FFFFFF;--text:#3F3F3F;--muted:#9D9D9D;--border:rgba(0,0,0,.1);--shadow:0 20px 50px rgba(0,0,0,.05)}
 *{box-sizing:border-box}
-/* Embedded: lascia che l'intranet controlli lo sfondo; qui trasparente */
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:transparent; color:var(--text);}
-a{color:var(--primary);text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+
+/* FAKE CORPORATE HEADER */
+.corp-header{background:var(--primary);color:#fff}
+.corp-top{display:flex;align-items:center;gap:14px;padding:10px 18px}
+.corp-logo{font-weight:900;letter-spacing:.5px}
+.corp-menu{background:#b8001f;display:flex;gap:18px;padding:8px 18px;font-size:13px}
+.corp-menu span{opacity:.85}
+.corp-menu .active{opacity:1;font-weight:700}
 
 main{max-width:1040px;margin:0 auto;padding:18px}
-
-/* Sub-navigation interna (leggera) */
-.subnav{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
-.subnav .title{font-size:18px;font-weight:900;letter-spacing:.2px}
-.subnav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.tab{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:12px}
-.tab.active{border-color:rgba(223,0,37,.35);background:rgba(223,0,37,.06)}
-
-.grid{display:grid;gap:14px;grid-template-columns:1.2fr .8fr}
-@media (max-width:900px){.grid{grid-template-columns:1fr;}}
-
-.card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow: var(--shadow)}
-h2{font-size:15px;margin:0 0 10px}
-.muted{color:var(--muted); font-size:12px; line-height:1.4}
-
-label{display:block;font-size:12px;color:var(--text);margin:10px 0 6px}
-input, select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);outline:none}
-input:focus, select:focus{border-color:rgba(223,0,37,.55); box-shadow:0 0 0 3px rgba(223,0,37,.12)}
-
-button{border:0;border-radius:10px;padding:10px 12px;background:var(--primary);color:#fff;font-weight:800;cursor:pointer}
-button.secondary{background:#fff;color:var(--primary);border:1px solid rgba(223,0,37,.35)}
-button.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
-
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.row > *{flex:1}
-
-.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-@media (max-width:900px){.kpi{grid-template-columns:repeat(2,1fr);}}
-.box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px}
-.val{font-size:16px;font-weight:900}
-
-.tag{display:inline-flex;gap:6px;align-items:center;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:#fff}
-.tag.ok{border-color:rgba(11,142,95,.35); color:var(--ok)}
-.tag.warn{border-color:rgba(184,121,0,.35); color:var(--warn)}
-.tag.bad{border-color:rgba(176,0,32,.35); color:var(--bad)}
-
-.list{margin:10px 0 0; padding:0; list-style:none}
-.list li{padding:10px;border-radius:12px;border:1px solid var(--border); background:#fff; margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.list small{display:block;color:var(--muted);margin-top:3px}
-
-.note{border-left:3px solid rgba(223,0,37,.7);padding:10px 12px;background:rgba(223,0,37,.06);border-radius:12px;color:var(--text);font-size:12px}
-.error{white-space:pre-wrap;background:rgba(176,0,32,.06);border:1px solid rgba(176,0,32,.25);padding:10px;border-radius:12px;color:var(--bad);font-size:12px}
-
-.metrics{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
-.metric{font-size:12px;color:var(--text);background:#fff;border:1px solid var(--border);padding:8px 10px;border-radius:12px}
-.metric b{margin-left:6px}
-
-.dialog-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:18px;z-index:99}
-.dialog{background:#fff;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);max-width:520px;width:100%;padding:16px}
-.dialog h3{margin:0 0 10px;font-size:14px}
-
-.chart-wrap{position:relative}
-.chart-tooltip{
-  position:absolute;
-  pointer-events:none;
-  background:#fff;
-  border:1px solid var(--border);
-  box-shadow: var(--shadow);
-  border-radius:10px;
-  padding:8px 10px;
-  font-size:12px;
-  color:var(--text);
-  transform: translate(-50%, -110%);
-  white-space:nowrap;
-}
-.chart-tooltip b{margin-left:6px}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.subnav{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+.tab{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px}
+.tab.active{background:rgba(223,0,37,.08);border-color:rgba(223,0,37,.35)}
+.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+label{font-size:12px}
+input,select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--border)}
+button{background:var(--primary);color:#fff;border:0;border-radius:10px;padding:10px 12px;font-weight:800}
+.muted{color:var(--muted);font-size:12px}
